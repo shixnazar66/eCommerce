@@ -65,7 +65,7 @@ async function remove(req,res,next){
         throw new Error(`favorite ${ID} ID not found`)
     }
     await pool.query(`delete from favorite where ID = ${ID}`)
-    res.send('bingo')
+    res.send('bingoo')
     } catch (error) {
     next(error)
     }
