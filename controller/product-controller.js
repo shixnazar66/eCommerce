@@ -43,7 +43,7 @@ async function findAll(req, res, next) {
       verify = new Pagination(page,paginationLimit,data[0].length)
       const [result] = await pool.query(`SELECT * FROM product LIMIT '${verify.limit}' OFFSET '${verify.offset}'`)
       if (result.length == 0) {
-        throw new Error('PRODUCT NOT FOUND')
+        throw new Error('RODUCT NOT FOUND')
       }
     }
     const [result] = data;
