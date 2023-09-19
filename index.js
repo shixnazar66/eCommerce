@@ -10,12 +10,12 @@ const addressRoute = require('./routers/address-route')
 const attributeRoute = require('./routers/attribute-route')
 const attributevalueRoute = require('./routers/attributevalue-route')
 const basketRoute = require('./routers/basket-route')
-const favorite = require('./routers/favorite-route')
+const favoriteRoute = require('./routers/favorite-route')
+const orderRoute = require('./routers/order-route')
+const ApiResponse = require('./utils/response')
 const jwt = require('jsonwebtoken')
 const pool = require('./db/db.config.js')
-const ApiResponse = require('./utils/response')
 const bcrypt = require('bcrypt')
-const favoriteRoute = require('./routers/favorite-route')
 config()
 
 
@@ -32,6 +32,7 @@ app.use('/attribute',attributeRoute)
 app.use('/attributevalue',attributevalueRoute)
 app.use('/basket',basketRoute)
 app.use('/favorite',favoriteRoute)
+app.use('/order',orderRoute)
 
 
 app.post('/search',(req,res)=>{

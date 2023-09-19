@@ -22,39 +22,36 @@ async function post(req,res,next){
 
 
 async function findAll(req, res, next) {
-    try {
-      const { page, paginationLimit, catID, attrValue } = req.query;
-      let data;
-      let verify;
-      if (catID && attrValue) {
-        const items = await pool.query(`
-        SELECT p.* FROM product p JOIN attributevalue av JOIN product_attributevalue pav WHERE categoryID = ${catID} AND av.ID = pav.attributeValue_ID AND av.name=${attrValue}`);
-        verify = new Pagination(page, paginationLimit, items.length);
-        data = await pool.query(`
-        SELECT p.* FROM product p JOIN attributevalue av JOIN product_attributevalue pav WHERE categoryID = ${catID} AND  av.ID = pav.attributeValue_ID AND av.name='${attrValue}' LIMIT ${verify.limit} OFFSET ${verify.offset} `);
-      } else if (catID) {
-        const items = await pool.query(`SELECT * FROM product WHERE ID = ${catID}`);
-        verify = new Pagination(page, paginationLimit, items.length);
-        data = await pool.query(`SELECT * FROM product  WHERE categoryID = ${catID}  LIMIT ${verify.limit} OFFSET ${verify.offset}`);
-      } else if (attrValue) {
-        const items = await pool.query(`SELECT p.* FROM product p JOIN attributevalue av JOIN product_attributevalue pav WHERE av.ID = pav.attributeValue_ID AND av.name=${attrValue}`);
-        verify = new Pagination(page, paginationLimit, items.length);
-        data = await pool.query(`
-        SELECT p.* FROM product p JOIN attributevalue av JOIN product_attributevalue pav WHERE av.ID = pav.attributeValue_ID AND av.name='${attrValue}' LIMIT ${verify.limit} OFFSET ${verify.offset} `);
-      } else {
-        const data = await pool.query('SELECT * FROM product');
-        verify = new Pagination(page, paginationLimit, data[0].length);
-        const [result] = await pool.query(`SELECT * FROM product LIMIT ${verify.limit} OFFSET ${verify.offset}`);
-        if (result.length == 0) {
-          throw new Error('PRODUCT NOT FOUND');
-        }
+  try {
+    const {page, paginationLimit, catID, attributeValue} = req.query
+    let data
+    let verify
+    if (catID && attributeValue) {
+      const [items] = await pool.query(`SELECT * FROM product p JOIN attribute at JOIN category ca JOIN category_product cap ON ca.ID = cap.product_ID AND at.ID='${attributeValue}' WHERE cap.category_ID = '${catID}'`)
+      verify = new Pagination(page, paginationLimit, items.length)
+      data = await pool.query(`SELECT * FROM product p JOIN attribute at JOIN category ca JOIN category_product cap ON ca.ID = cap.product_ID AND at.ID='${attributeValue}' WHERE cap.category_ID = '${catID}'  LIMIT ${verify.limit} OFFSET ${verify.offset}`)
+    } else if (catID) {
+      const [items] = await pool.query(`SELECT * FROM product WHERE ID = '${catID}'`)
+      verify = new Pagination(page,paginationLimit,items.length)
+      data = await pool.query(`SELECT * FROM product p JOIN category ca JOIN category_product cap ON ca.ID = cap.product_ID WHERE categoryID = '${catID}'  LIMIT ${verify.limit} OFFSET ${verify.offset}`)
+    } else if (attributeValue) {
+      const [items] = await pool.query(`SELECT * FROM product p JOIN attributevalue av JOIN product_attributevalue pav WHERE av.ID = pav.attributeValue_ID AND av.name='${attributeValue}'`)
+      verify = new Pagination(page,paginationLimit,items.length)
+      data = await pool.query(`SELECT * FROM product p JOIN attributevalue av JOIN product_attributevalue pav WHERE av.ID = pav.attributeValue_ID AND av.name='${attributeValue}' LIMIT ${verify.limit} OFFSET ${verify.offset}`)
+    } else {
+      const data = await pool.query(`SELECT * FROM product`)
+      verify = new Pagination(page,paginationLimit,data[0].length)
+      const [result] = await pool.query(`SELECT * FROM product LIMIT '${verify.limit}' OFFSET '${verify.offset}'`)
+      if (result.length == 0) {
+        throw new Error('PRODUCT NOT FOUND')
       }
-      const [result] = data;
-      res.send({ result, pagination: verify });
-    } catch (error) {
-      next(error);
     }
+    const [result] = data;
+    res.send({ result, pagination: verify })
+  } catch (error) {
+    next(error);
   }
+}
 
 
 async function get(req,res,next){
