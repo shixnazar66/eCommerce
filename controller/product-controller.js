@@ -59,7 +59,7 @@ async function get(req,res,next){
     const ID = req.params.id
     const [[product]] = await pool.query(`select * from product where ID = ${ID}`)
     if(!product){
-        throw new Error(`product ${ID} ID not found`)
+      throw new Error(`product ${ID} ID not found`)
     }
     let viewCount = product.viewCount
     if(product){
@@ -78,7 +78,7 @@ async function put(req,res,next){
     const ID = req.params.id
     const [[productID]] = await pool.query(`select * from product where ID = '${ID}'`)
     if (!productID) {
-        throw new Error(`product ${ID} ID not found`)
+      throw new Error(`product ${ID} ID not found`)
     }
     const {nameUZ,nameRU,images,categoryID,descSHORTUZ,descSHORTRU,descUZ,descRU,price,
     isPopular,viewCount,favoriteCount,orderCount,cartCount,discount,createdAT,updateAT} = req.body
@@ -115,7 +115,7 @@ async function remove(req,res,next){
     const ID = req.params.id
     const [[productID]] = await pool.query(`select * from product where ID = ${ID}`)
     if(!productID){
-        throw new Error(`product ${ID} ID not found`)
+      throw new Error(`product ${ID} ID not found`)
     }
     await pool.query(`delete from product where ID = ${ID}`)
     res.send('bingo')

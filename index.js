@@ -12,6 +12,7 @@ const attributevalueRoute = require('./routers/attributevalue-route')
 const basketRoute = require('./routers/basket-route')
 const favoriteRoute = require('./routers/favorite-route')
 const orderRoute = require('./routers/order-route')
+const reviewRoute = require('./routers/review-route')
 const ApiResponse = require('./utils/response')
 const jwt = require('jsonwebtoken')
 const pool = require('./db/db.config.js')
@@ -33,6 +34,7 @@ app.use('/attributevalue',attributevalueRoute)
 app.use('/basket',basketRoute)
 app.use('/favorite',favoriteRoute)
 app.use('/order',orderRoute)
+app.use('/review',reviewRoute)
 
 
 app.post('/search',(req,res)=>{
@@ -68,6 +70,7 @@ app.post("/media",upload.array('photos',12),(req,res)=>{
 })
 
 app.use("/uploads",express.static("./uploads"))
+
 
 
 app.get('/',(req,res)=>res.send('Home address. GET method'))
